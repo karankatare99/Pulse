@@ -7,7 +7,7 @@ const BodySchema = z.object({
     name: z.string()
 })
 
-export const CreateSpace = async (request : NextRequest) => {
+export async function POST(request : NextRequest) {
     const body = await request.json() ?? ""
     const { success } = BodySchema.safeParse(body)
 

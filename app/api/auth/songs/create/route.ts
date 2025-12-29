@@ -1,17 +1,14 @@
 import prisma from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
+import YouTube from "youtube-sr"
 import { z } from "zod"
 
 const BodySchema = z.object({
     spaceId: z.string(),
-    title: z.string(),
-    channel: z.string(),
-    thumbnail: z.string(),
-    votes: z.number(),
     url: z.string()
 })
 
-export const AddSong = async (request: NextRequest) => {
+export async function POST(request: NextRequest) {
     const body = await request.json()
     const { success } = BodySchema.safeParse(body)
     const urlId = body.url.split("?v=")[1]
@@ -23,13 +20,16 @@ export const AddSong = async (request: NextRequest) => {
     }
 
     try {
+
+        const video = await YouTube.getVideo(body.url)
+
         const new_song = await prisma.song.create({
             data: {
                 id: urlId,
                 spaceId: body.spaceId,
-                title: body.title,
-                channel: body.channel,
-                thumbnail: body.thumbnail,
+                title: video.title ?? "Title not Found",
+                channel: video.channel?.name ?? "Channel not Found",
+                thumbnail: video.thumbnail?.url ?? "Thumbnail not Found",
                 url: body.thumbnail,
                 votes: 0
             }

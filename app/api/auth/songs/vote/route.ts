@@ -6,7 +6,7 @@ const BodySchema = z.object({
     songId: z.string()
 })
 
-export const Vote = async (request : NextRequest) => {
+export async function POST(request : NextRequest) {
     const body = await request.json()
     const { success } = BodySchema.safeParse(body)
 
