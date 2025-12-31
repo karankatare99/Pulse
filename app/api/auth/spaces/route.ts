@@ -1,38 +1,28 @@
+'use server'
 import prisma from "@/lib/prisma"
-import { NextRequest, NextResponse } from "next/server"
-import { z } from "zod"
 
-const BodySchema = z.object({
-    userId: z.string(),
-    name: z.string()
-})
-
-export async function POST(request : NextRequest) {
-    const body = await request.json() ?? ""
-    const { success } = BodySchema.safeParse(body)
-
-    if (!success) {
-        return NextResponse.json({
-            msg: "Invalid Body"
-        })
-    }
-
+export async function createSpace(prevState: any, formData: FormData) {
     try {
+        const name = formData.get('spaceName') as string
+        const email = formData.get('userEmail') as string
+        
+        const user = await prisma.user.findUnique({
+            where: { email }
+        })
+        
+        if (!user) {
+            return { success: false, error: "User not found" }
+        }
+        
         const new_space = await prisma.space.create({
             data: {
-                userId: body.id,
-                name: body.name
+                userId: user.id,
+                name
             }
         })
-
-        return NextResponse.json(
-            new_space
-        )
-    } catch(e) {
-        console.log(e)
-        return NextResponse.json({
-            msg: "Failed to Create Space"
-        })
+        
+        return { success: true, space: new_space }
+    } catch (error) {
+        return { success: false, error: "Failed to create space" }
     }
-
 }
