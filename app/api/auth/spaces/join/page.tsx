@@ -1,7 +1,5 @@
 import { Navbar } from "@/app/components/Navbar";
-import { SpaceBodyCreate } from "@/app/components/SpaceBodyCreate";
-import SpaceRadio from "@/app/components/SpaceRadio";
-
+import { SpaceBodyJoin } from "@/app/components/SpaceBodyJoin";
 
 export default function () {
     return (
@@ -12,10 +10,7 @@ export default function () {
             }}>
                 <div className="w-full h-screen">
                     <Navbar />
-                    <div className="flex items-center">
-                        <SpaceRadio />
-                        <SpaceBodyCreate />
-                    </div>
+                    <SpaceBodyJoin />
                 </div>
             </div>
         </div>

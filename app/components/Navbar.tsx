@@ -1,12 +1,17 @@
 "use client";
-import { signIn } from "next-auth/react";
+
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+
+
 export const Navbar = () => {
 
   const navItems = [
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
+
+  const { data: session, status } = useSession()
 
   return (
     <nav className="w-full backdrop-blur-md sticky top-0 z-50 shadow-lg">
@@ -26,9 +31,23 @@ export const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-            <button onClick={() => signIn()} className="border-2 border-white px-4 py-2 font-medium rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 hover:cursor-pointer">
-              Sign In
-            </button>
+            {status === "loading" ? (
+              <div className="w-24 h-10 bg-gray-700 rounded-lg animate-pulse" />
+            ) : session ? (
+              <button 
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="border-2 border-white px-4 py-2 font-medium rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <button 
+                onClick={() => signIn()}
+                className="border-2 border-white px-4 py-2 font-medium rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </div>
