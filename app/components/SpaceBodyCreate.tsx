@@ -36,7 +36,7 @@ export const SpaceBodyCreate = () => {
                 />
                 
                 {result.error && (
-                    <p className="text-red-400 text-sm mt-2">{result.error}</p>
+                    <p className="text-red-400 text-sm mt-2 animate-pulse">{result.error}</p>
                 )}
                 
                 <button 

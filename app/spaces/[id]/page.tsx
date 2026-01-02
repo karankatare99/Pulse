@@ -1,18 +1,95 @@
-import { notFound } from 'next/navigation'
-import prisma from '@/lib/prisma'
+"use client";
 
-export default async function SpacePage({ params }: { params: { id: string } }) {
-    const space = await prisma.space.findUnique({
-        where: { id: params.id },
-        include: { user: true }
-    })
-    
-    if (!space) notFound()
-    
-    return (
-        <div>
-            <h1>{space.name}</h1>
-            {/* Space content */}
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Navbar } from "@/app/components/Navbar";
+import CosmicAudioPlayer from "@/app/components/CosmicAudioPlayer";
+import CosmicSongQueue from "@/app/components/CosmicSongQueue";
+
+
+export interface Song {
+  id: string;
+  spaceId: string;
+  title: string;
+  channel: string;    // Maps to "Artist" in the UI
+  thumbnail: string;  // URL for the album art/image
+  url: string;        // The Youtube/Audio source URL
+  votes: number;
+}
+
+const currentTrack: Song = {
+  id: "curr-1",
+  spaceId: "space01",
+  title: "Nebula Dreams",
+  channel: "Stellar Echo",
+  thumbnail: "from-cyan-500 via-blue-500 to-purple-600",
+  url: "space01yt",
+  votes: 0,
+};
+
+const initialQueueData: Song[] = [
+  { id: "q-1", spaceId:"space02", title: "Quantum Drift", channel: "The Void Walkers", thumbnail: "from-purple-500 to-pink-500", url: "sapce01", votes: 42 },
+  { id: "q-2", spaceId:"space03", title: "Event Horizon", channel: "Gravity Well", thumbnail: "from-indigo-500 to-cyan-500", url: "sapce03", votes: 18 },
+  { id: "q-3", spaceId:"space04", title: "Starship Velocity", channel: "Nova Beats", thumbnail: "from-orange-500 to-red-500", url: "sapce04", votes: 7 },
+  { id: "q-4", spaceId:"space05", title: "Cosmic Dust", channel: "Lunar Tides", thumbnail: "from-green-500 to-emerald-500", url: "sapce05", votes: 3 },
+];
+
+// --- STAR GENERATION LOGIC ---
+type StarData = { id: number; top: string; left: string; size: string; duration: number; moveY: number; initialOpacity: number; };
+
+export default function StreamPage() {
+  const [stars, setStars] = useState<StarData[]>([]);
+
+  useEffect(() => {
+    const generatedStars = Array.from({ length: 35 }).map((_, i) => ({
+      id: i,
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      size: `${Math.random() * 3 + 1}px`,
+      duration: Math.random() * 5 + 5,
+      moveY: Math.random() * -100,
+      initialOpacity: Math.random()
+    }));
+    setStars(generatedStars);
+  }, []);
+
+  return (
+    <div className="min-h-screen w-full relative bg-slate-950 overflow-hidden text-white flex flex-col">
+      {/* --- BACKGROUND LAYER (Cosmic Theme) --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-purple-900/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-cyan-900/20 rounded-full blur-[120px]" />
+        {stars.map((star) => (
+          <motion.div
+            key={star.id}
+            className="absolute bg-white rounded-full"
+            initial={{ opacity: star.initialOpacity, scale: 0.5 }}
+            animate={{ opacity: [0.2, 0.8, 0.2], y: [0, star.moveY] }}
+            transition={{ duration: star.duration, repeat: Infinity, ease: "linear" }}
+            style={{ width: star.size, height: star.size, top: star.top, left: star.left }}
+          />
+        ))}
+      </div>
+
+      {/* --- CONTENT LAYER --- */}
+      <div className="relative z-10 flex flex-col h-full">
+        <Navbar />
+        
+        {/* Main Split Layout Container */}
+        <div className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-8 p-6 lg:p-12 max-w-7xl mx-auto w-full">
+            
+            {/* LEFT: Audio Player */}
+            <div className="w-full lg:w-5/12 lg:sticky lg:top-24">
+                 <CosmicAudioPlayer track={currentTrack} />
+            </div>
+
+            {/* RIGHT: Song Queue */}
+            <div className="w-full lg:w-7/12">
+                 <CosmicSongQueue initialQueue={initialQueueData} />
+            </div>
+
         </div>
-    )
+      </div>
+    </div>
+  );
 }

@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Navbar } from "@/app/components/Navbar";
 import { SpaceBodyJoin } from "@/app/components/SpaceBodyJoin";
 
-// Star Type Definition
 type StarData = {
   id: number;
   top: string;
@@ -19,7 +18,6 @@ type StarData = {
 export default function JoinSpacePage() {
   const [stars, setStars] = useState<StarData[]>([]);
 
-  // Generate stars on client side only to avoid hydration mismatch
   useEffect(() => {
     const generatedStars = Array.from({ length: 30 }).map((_, i) => ({
       id: i,
@@ -36,13 +34,10 @@ export default function JoinSpacePage() {
   return (
     <div className="min-h-screen w-full relative bg-slate-950 overflow-hidden flex flex-col text-white">
       
-      {/* --- BACKGROUND LAYER --- */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        {/* Nebulas */}
         <div className="absolute top-[-20%] left-[-10%] w-125 h-125 bg-purple-900/30 rounded-full blur-[120px]" />
         <div className="absolute bottom-[-20%] right-[-10%] w-125 h-125 bg-indigo-900/30 rounded-full blur-[120px]" />
         
-        {/* Moving Stars */}
         {stars.map((star) => (
           <motion.div
             key={star.id}
@@ -55,7 +50,6 @@ export default function JoinSpacePage() {
         ))}
       </div>
 
-      {/* --- CONTENT LAYER --- */}
       <div className="relative z-10 w-full h-full flex flex-col">
         <Navbar />
         <div className="flex-1 flex items-center justify-center p-4">

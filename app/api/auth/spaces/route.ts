@@ -26,3 +26,22 @@ export async function createSpace(prevState: any, formData: FormData) {
         return { success: false, error: "Failed to create space" }
     }
 }
+
+export async function findSpace(formData : FormData) {
+    try {
+        const spaceName = formData.get('spaceName') as string
+        const space = await prisma.space.findUnique({
+            where: {
+                name: spaceName
+            }
+        })
+
+        if (!space) {
+            return { success: false, error: "Space not found" }
+        }
+
+        return { success: true, space: space }
+    } catch (error) {
+        return { success: false, error: "Failed to find space" }
+    }
+}
