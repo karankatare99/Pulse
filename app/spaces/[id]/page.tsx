@@ -57,8 +57,8 @@ export default function StreamPage() {
     <div className="min-h-screen w-full relative bg-slate-950 overflow-hidden text-white flex flex-col">
       {/* --- BACKGROUND LAYER (Cosmic Theme) --- */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-purple-900/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-cyan-900/20 rounded-full blur-[120px]" />
+        <div className="absolute top-[-20%] left-[-10%] w-150 h-150 bg-purple-900/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-5%] w-125 h-125 bg-cyan-900/20 rounded-full blur-[120px]" />
         {stars.map((star) => (
           <motion.div
             key={star.id}

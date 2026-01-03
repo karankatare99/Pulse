@@ -34,7 +34,7 @@ const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
       initial={{ x: 50, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-      className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 shadow-2xl relative overflow-hidden h-full min-h-[600px] flex flex-col"
+      className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-6 shadow-2xl relative overflow-hidden h-full min-h-150 flex flex-col"
     >
         {/* Header */}
         <div className="flex justify-between items-center mb-8 relative z-10">
@@ -66,11 +66,11 @@ const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
                         borderColor: justVotedId === song.id ? "rgba(34, 211, 238, 0.5)" : "rgba(255, 255, 255, 0.1)"
                     }}
                     transition={{ duration: 0.4 }}
-                    className="flex items-center justify-between p-3 rounded-[1.5rem] border border-white/10 bg-white/5 hover:bg-white/10 transition-all group"
+                    className="flex items-center justify-between p-3 rounded-3xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all group"
                 >
                     <div className="flex items-center gap-4 flex-1">
                         {/* Song Index / Small Cover */}
-                        <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${song.thumbnail} flex items-center justify-center text-white/70 font-bold shadow-sm`}>
+                        <div className={`w-12 h-12 rounded-2xl bg-linear-to-br ${song.thumbnail} flex items-center justify-center text-white/70 font-bold shadow-sm`}>
                             {index + 1}
                         </div>
                         <div className="min-w-0 flex-1">
@@ -82,7 +82,7 @@ const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
                     {/* Voting System */}
                     <div className="flex items-center gap-3 pl-4">
                          {/* Requirement: Vote Count Display */}
-                        <span className="font-mono text-sm text-slate-300 min-w-[24px] text-center">{song.votes}</span>
+                        <span className="font-mono text-sm text-slate-300 min-w-6 text-center">{song.votes}</span>
                         
                          {/* Requirement: Vote Button */}
                         <button 
@@ -98,7 +98,7 @@ const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
         </div>
         
         {/* Bottom fade overlay for scrolling list */}
-        <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-slate-950/80 to-transparent pointer-events-none z-20 rounded-b-[2.5rem]" />
+        <div className="absolute bottom-0 left-0 right-0 h-12 bg-linear-to-t from-slate-950/80 to-transparent pointer-events-none z-20 rounded-b-[2.5rem]" />
 
     </motion.div>
   );
