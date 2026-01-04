@@ -15,15 +15,14 @@ export async function POST(request: NextRequest) {
 
     if (!success) {
         return NextResponse.json({
-            msg: "Invalid Body"
+            msg: "Invalid inputs"
         })
     }
 
     try {
-
         const video = await YouTube.getVideo(body.url)
 
-        const new_song = await prisma.song.create({
+        const song = await prisma.song.create({
             data: {
                 id: urlId,
                 spaceId: body.spaceId,
@@ -35,14 +34,17 @@ export async function POST(request: NextRequest) {
             }
         })
 
-        return NextResponse.json(
-            new_song
+        return (
+            NextResponse.json({ song })
         )
     } catch(e) {
         console.error(e)
-        return NextResponse.json({
-            msg: "Failed to Add Song"
-        })
+        
+        return (
+            NextResponse.json({
+                msg: "Failed to put song"
+            })
+        )
     }
 
 }

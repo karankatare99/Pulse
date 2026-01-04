@@ -11,10 +11,20 @@ export interface Song {
   id: string;
   spaceId: string;
   title: string;
-  channel: string;    // Maps to "Artist" in the UI
-  thumbnail: string;  // URL for the album art/image
-  url: string;        // The Youtube/Audio source URL
+  channel: string;
+  thumbnail: string;  
+  url: string;        
   votes: number;
+}
+
+const emptyTrack: Song = {
+  id: "",
+  spaceId: "",
+  title: "Add songs to the queue",
+  channel: "Melodies",
+  thumbnail: "",
+  url: "",
+  votes: 0
 }
 
 const currentTrack: Song = {
@@ -27,14 +37,8 @@ const currentTrack: Song = {
   votes: 0,
 };
 
-const initialQueueData: Song[] = [
-  { id: "q-1", spaceId:"space02", title: "Quantum Drift", channel: "The Void Walkers", thumbnail: "from-purple-500 to-pink-500", url: "sapce01", votes: 42 },
-  { id: "q-2", spaceId:"space03", title: "Event Horizon", channel: "Gravity Well", thumbnail: "from-indigo-500 to-cyan-500", url: "sapce03", votes: 18 },
-  { id: "q-3", spaceId:"space04", title: "Starship Velocity", channel: "Nova Beats", thumbnail: "from-orange-500 to-red-500", url: "sapce04", votes: 7 },
-  { id: "q-4", spaceId:"space05", title: "Cosmic Dust", channel: "Lunar Tides", thumbnail: "from-green-500 to-emerald-500", url: "sapce05", votes: 3 },
-];
+const initialQueueData: Song[] = [];
 
-// --- STAR GENERATION LOGIC ---
 type StarData = { id: number; top: string; left: string; size: string; duration: number; moveY: number; initialOpacity: number; };
 
 export default function StreamPage() {
@@ -55,7 +59,6 @@ export default function StreamPage() {
 
   return (
     <div className="min-h-screen w-full relative bg-slate-950 overflow-hidden text-white flex flex-col">
-      {/* --- BACKGROUND LAYER (Cosmic Theme) --- */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-150 h-150 bg-purple-900/20 rounded-full blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[-5%] w-125 h-125 bg-cyan-900/20 rounded-full blur-[120px]" />
@@ -71,19 +74,15 @@ export default function StreamPage() {
         ))}
       </div>
 
-      {/* --- CONTENT LAYER --- */}
       <div className="relative z-10 flex flex-col h-full">
         <Navbar />
         
-        {/* Main Split Layout Container */}
         <div className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-8 p-6 lg:p-12 max-w-7xl mx-auto w-full">
             
-            {/* LEFT: Audio Player */}
             <div className="w-full lg:w-5/12 lg:sticky lg:top-24">
-                 <CosmicAudioPlayer track={currentTrack} />
+                 <CosmicAudioPlayer track={currentTrack ?? emptyTrack} />
             </div>
 
-            {/* RIGHT: Song Queue */}
             <div className="w-full lg:w-7/12">
                  <CosmicSongQueue initialQueue={initialQueueData} />
             </div>
