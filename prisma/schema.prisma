@@ -29,7 +29,7 @@ model Song {
   title String
   channel String
   thumbnail String
-  url String @unique
+  url String
   votes Int
   space Space @relation(fields: [spaceId], references: [id])
 }

@@ -17,16 +17,6 @@ export interface Song {
   votes: number;
 }
 
-const emptyTrack: Song = {
-  id: "",
-  spaceId: "",
-  title: "Add songs to the queue",
-  channel: "Melodies",
-  thumbnail: "",
-  url: "",
-  votes: 0
-}
-
 const currentTrack: Song = {
   id: "curr-1",
   spaceId: "space01",
@@ -80,7 +70,7 @@ export default function StreamPage() {
         <div className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-8 p-6 lg:p-12 max-w-7xl mx-auto w-full">
             
             <div className="w-full lg:w-5/12 lg:sticky lg:top-24">
-                 <CosmicAudioPlayer track={currentTrack ?? emptyTrack} />
+                 <CosmicAudioPlayer track={currentTrack} />
             </div>
 
             <div className="w-full lg:w-7/12">
