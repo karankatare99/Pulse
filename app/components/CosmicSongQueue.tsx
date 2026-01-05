@@ -5,10 +5,7 @@ import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp, Plus, X, Link as LinkIcon, Youtube } from 'lucide-react';
 import { Song } from '../spaces/[id]/page';
-import YouTube from 'youtube-sr';
-import { findSpace } from '../api/auth/spaces/route';
 import axios from 'axios';
-import prisma from '@/lib/prisma';
 
 interface QueueProps {
     initialQueue: Song[];
@@ -41,19 +38,24 @@ const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
         if (!url.includes("https://www.youtube.com/watch?v=")) return
 
         
-        const songData: Song = await axios.post("/api/auth/songs/create", {
+        const res = await axios.post("/api/auth/songs/create", {
             spaceId: spaceId,
             url: url
         })
 
-        const { title, channel, thumbnail } = songData
+        const songData = res.data.song
+
+        if (!songData) {
+            console.error("No data in songData")
+            return
+        }
 
         const newSong: Song = {
             id: url.split("?v=")[1],
             spaceId: spaceId,
-            title: title ?? "New Song",
-            channel: channel ?? "User",
-            thumbnail: thumbnail ?? "bg-linear-to-r from-gray-300 to-gray-600",
+            title: songData.title ?? "New Song",
+            channel: songData.channel ?? "User",
+            thumbnail: songData.thumbnail ?? "bg-linear-to-r from-gray-300 to-gray-600",
             url: url,
             votes: 0
         };
