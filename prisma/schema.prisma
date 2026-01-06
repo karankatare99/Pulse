@@ -25,6 +25,7 @@ model Space {
 
 model Song {
   id String @id
+  currentTrack Boolean @default(false)
   spaceId String
   title String
   channel String

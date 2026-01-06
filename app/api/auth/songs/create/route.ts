@@ -8,7 +8,6 @@ const BodySchema = z.object({
     url: z.string()
 })
 
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -25,6 +24,36 @@ export async function POST(request: NextRequest) {
 
     const video = await YouTube.getVideo(url);
 
+    const songExists = await prisma.song.findFirst({
+      where: {
+        id: urlId,
+        spaceId: spaceId
+      }
+    })
+
+    if (songExists) {
+      await prisma.song.update({
+        where: {
+          id: urlId,
+          spaceId: spaceId
+        },
+        data: {
+          votes: {
+            increment: 1
+          }
+        }
+      })
+
+      const song = await prisma.song.findFirst({
+        where: {
+          id: urlId,
+          spaceId: spaceId
+        }
+      })
+
+      return NextResponse.json({ song })
+    }
+
     const song = await prisma.song.create({
       data: {
         id: urlId!,
@@ -37,7 +66,7 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    return NextResponse.json({ song });  // ✅ Returns data
+    return NextResponse.json({ song });
   } catch (e) {
     console.error('Song API error:', e);
     return NextResponse.json({ msg: "Failed to put song" }, { status: 500 });

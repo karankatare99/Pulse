@@ -21,15 +21,10 @@ const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
     const params = useParams()
     const spaceId = params.id as string
 
-    const handleVote = (id: string) => {
-        setJustVotedId(id);
-        setTimeout(() => setJustVotedId(null), 600);
-
-        setQueue(prevQueue => 
-            prevQueue.map(song => 
-                song.id === id ? { ...song, votes: song.votes + 1 } : song
-            ).sort((a, b) => b.votes - a.votes)
-        );
+    const handleVote = async (id: string) => {
+        await axios.post("/api/auth/songs/vote", {
+            id: id
+        })
     };
 
     const handleAddSong = async () => {
@@ -37,43 +32,32 @@ const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
 
         if (!url.includes("https://www.youtube.com/watch?v=")) return
 
-        try {
-            const res = await axios.post("/api/auth/songs/create", {
-                spaceId: spaceId,
-                url: url
-            })
-            if (!res) {
-                console.error("No data in response")
-            }
-
-            const songData = res.data.song
-
-            if (!songData) {
-                console.error("No data in response.data")
-                return
-            }
-
-            const newSong: Song = {
-                id: url.split("?v=")[1],
-                spaceId: spaceId,
-                title: songData.title ?? "New Song",
-                channel: songData.channel ?? "User",
-                thumbnail: songData.thumbnail ?? "bg-linear-to-r from-gray-300 to-gray-600",
-                url: url,
-                votes: 0
-            };
-
-            setQueue([...queue, newSong]);
-        } catch(e) {
-            console.log("axios is fked up")
+        const res = await axios.post("/api/auth/songs/create", {
+            spaceId: spaceId,
+            url: url
+        })
+        if (!res) {
+            console.error("No data in response")
         }
 
-        const loadAudio = async () => {
-            const params = new URLSearchParams({ url: url });
-            const streamUrl = `/api/audio?${params}`;
-            setAudioUrl(streamUrl);
+        const songData = res.data.song
+
+        if (!songData) {
+            console.error("No data in response.data")
+            return
+        }
+
+        const newSong: Song = {
+            id: url.split("?v=")[1],
+            spaceId: spaceId,
+            title: songData.title ?? "New Song",
+            channel: songData.channel ?? "User",
+            thumbnail: songData.thumbnail ?? "bg-linear-to-r from-gray-300 to-gray-600",
+            url: url,
+            votes: 0
         };
 
+        setQueue([...queue, newSong]);
         setUrlInput("");
         setIsModalOpen(false);
     };
@@ -155,7 +139,6 @@ const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
                         className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
                     />
 
-                    {/* Modal Window */}
                     <motion.div 
                         initial={{ scale: 0.9, opacity: 0, y: 20 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}

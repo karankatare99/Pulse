@@ -70,7 +70,7 @@ export default function StreamPage() {
         <div className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-8 p-6 lg:p-12 max-w-7xl mx-auto w-full">
             
             <div className="w-full lg:w-5/12 lg:sticky lg:top-24">
-                 <CosmicAudioPlayer track={currentTrack} />
+                 <CosmicAudioPlayer />
             </div>
 
             <div className="w-full lg:w-7/12">
