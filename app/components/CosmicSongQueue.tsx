@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp, Plus, X, Link as LinkIcon, Youtube } from 'lucide-react';
@@ -11,8 +11,8 @@ interface QueueProps {
     initialQueue: Song[];
 }
 
-const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
-    const [queue, setQueue] = useState<Song[]>(initialQueue);
+const CosmicSongQueue = () => {
+    const [queue, setQueue] = useState<Song[]>([]);
     const [justVotedId, setJustVotedId] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [urlInput, setUrlInput] = useState("");
@@ -20,6 +20,12 @@ const CosmicSongQueue: React.FC<QueueProps> = ({ initialQueue }) => {
 
     const params = useParams()
     const spaceId = params.id as string
+    
+    useEffect(() => {
+        axios.post("/api/auth/songs/queue", {
+            spaceId
+        }).then(res => setQueue(res.data.queue))
+    }, [queue])
 
     const handleVote = async (id: string) => {
         await axios.post("/api/auth/songs/vote", {

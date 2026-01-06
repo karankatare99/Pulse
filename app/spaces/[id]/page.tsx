@@ -74,7 +74,7 @@ export default function StreamPage() {
             </div>
 
             <div className="w-full lg:w-7/12">
-                 <CosmicSongQueue initialQueue={initialQueueData} />
+                 <CosmicSongQueue />
             </div>
 
         </div>

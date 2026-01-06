@@ -27,7 +27,16 @@ export async function POST(request: NextRequest) {
             }
         })
 
-        return NextResponse.json({ queue })
+        if (queue) {
+            return NextResponse.json({ queue })
+        } else {
+            return NextResponse.json({ 
+                title: "New Song",
+                channel: "User",
+                thumbnail: "bg-linear-to-r from-gray-300 to-gray-600",
+                votes: 0
+            })
+        }
     } catch(e) {
         console.error('Song API error:', e);
         return NextResponse.json({ msg: "Failed to get song" }, { status: 500 });

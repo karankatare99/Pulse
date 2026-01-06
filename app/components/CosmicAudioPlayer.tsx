@@ -7,10 +7,6 @@ import { Song } from '../spaces/[id]/page';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 
-interface PlayerProps {
-    track: Song;
-}
-
 const CosmicAudioPlayer = async () => {
   const params = useParams()
   const spaceId = params.id as string
@@ -19,7 +15,7 @@ const CosmicAudioPlayer = async () => {
     currentTrack: true
   })
 
-  const track: Song = res.data.track
+  const [track, setTrack] = useState<Song>(res.data.track)
 
   return (
     <motion.div 
