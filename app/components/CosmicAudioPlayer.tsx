@@ -4,18 +4,15 @@ import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { Play, SkipForward, SkipBack, Heart, ListMusic } from 'lucide-react';
 import { Song } from '../spaces/[id]/page';
-import axios from 'axios';
-import { useParams } from 'next/navigation';
 
-const CosmicAudioPlayer = async () => {
-  const params = useParams()
-  const spaceId = params.id as string
-  const res = await axios.post("/api/auth/songs/current/get", {
-    spaceId,
-    currentTrack: true
-  })
 
-  const [track, setTrack] = useState<Song>(res.data.track)
+interface PlayerProps {
+  currentTrack: Song;
+}
+
+const CosmicAudioPlayer: React.FC<PlayerProps> = async ({ currentTrack }) => {
+
+  const [track, setTrack] = useState<Song>(currentTrack);
 
   return (
     <motion.div 

@@ -11,7 +11,7 @@ interface QueueProps {
     initialQueue: Song[];
 }
 
-const CosmicSongQueue = () => {
+const CosmicSongQueue:React.FC<QueueProps> = ({ initialQueue }) => {
     const [queue, setQueue] = useState<Song[]>([]);
     const [justVotedId, setJustVotedId] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);

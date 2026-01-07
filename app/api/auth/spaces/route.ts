@@ -1,47 +1,37 @@
-'use server'
-import prisma from "@/lib/prisma"
+import prisma from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+import z from "zod";
 
-export async function createSpace(prevState: any, formData: FormData) {
+const BodySchema = z.object({
+    userId: z.string(),
+    spaceName: z.string()
+})
+
+export async function POST(request: NextRequest) {
     try {
-        const name = formData.get('spaceName') as string
-        const email = formData.get('userEmail') as string
-        
-        const user = await prisma.user.findUnique({
-            where: { email }
-        })
-        
-        if (!user) {
-            return { success: false, error: "User not found" }
+        const body = await request.json();
+        const parseResult = BodySchema.safeParse(body);
+
+        if (!parseResult.success) {
+            return (
+                NextResponse.json({
+                    msg: "Invalid Inputs"
+                })
+            )
         }
-        
-        const new_space = await prisma.space.create({
+
+        const { userId, spaceName } = parseResult.data;
+
+        const space = await prisma.space.create({
             data: {
-                userId: user.id,
-                name
-            }
-        })
-        
-        return { success: true, space: new_space }
-    } catch (error) {
-        return { success: false, error: "Failed to create space" }
-    }
-}
-
-export async function findSpace(formData : FormData) {
-    try {
-        const spaceName = formData.get('spaceName') as string
-        const space = await prisma.space.findUnique({
-            where: {
-                name: spaceName
+                userId,
+                name: spaceName,
             }
         })
 
-        if (!space) {
-            return { success: false, error: "Space not found" }
-        }
-
-        return { success: true, space: space }
-    } catch (error) {
-        return { success: false, error: "Failed to find space" }
+        return NextResponse.json({ spaceId: space.id })
+    } catch(e) {
+        console.error('Space API error:', e);
+        return NextResponse.json({ msg: "Failed to create Space" }, { status: 500 });
     }
 }
